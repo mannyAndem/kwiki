@@ -1,13 +1,25 @@
-import { useState } from "react";
 import Home from "./pages/Home";
-import Navbar from "./components/Navbar";
+
+import { Route, Routes } from "react-router-dom";
+import Signup from "./pages/Signup";
+import AuthContextProvider from "./contexts/AuthContext";
+import Dashboard from "./pages/Dashboard";
+import { ThemeContextProvider } from "./contexts/ThemeContext";
+import Login from "./pages/Login";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      <Home />
+      <ThemeContextProvider>
+        <AuthContextProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/dashboard/*" element={<Dashboard />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </AuthContextProvider>
+      </ThemeContextProvider>
     </>
   );
 }
