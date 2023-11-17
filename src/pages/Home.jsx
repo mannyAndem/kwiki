@@ -5,7 +5,7 @@ import GetStarted from "../components/GetStarted";
 
 const Home = () => {
   return (
-    <div className="bg-veryLightBlue">
+    <div className="bg-veryLightBlue overflow-x-hidden">
       <Navbar />
       <Hero />
       <Features />

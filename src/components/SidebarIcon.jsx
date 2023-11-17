@@ -7,7 +7,7 @@ const SidebarIcon = ({ icon, name }) => {
       to={`/dashboard/${name}`}
       className="flex justify-between items-center dark:text-veryLightGray text-veryLightBlue"
     >
-      <span className="capitalize text-xl ">{name}</span>
+      <span className="hidden capitalize text-xl lg:block">{name}</span>
       {icon}
     </Link>
   );

@@ -6,6 +6,7 @@ import AuthContextProvider from "./contexts/AuthContext";
 import Dashboard from "./pages/Dashboard";
 import { ThemeContextProvider } from "./contexts/ThemeContext";
 import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -15,7 +16,14 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/dashboard/*" element={<Dashboard />} />
+            <Route
+              path="/dashboard/*"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/login" element={<Login />} />
           </Routes>
         </AuthContextProvider>

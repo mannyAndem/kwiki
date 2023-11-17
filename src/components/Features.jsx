@@ -28,10 +28,10 @@ const Features = () => {
   }, []);
 
   return (
-    <div className="features-section px-16 py-24 text-blue">
+    <div className="features-section px-5 py-24 text-blue lg:px-16">
       <h2 className="text-center font-bold text-4xl">Why Kwiki?</h2>
-      <div className="flex items-center gap-8 mt-10">
-        <img src={featuresImg} className="features-img w-1/2" />
+      <div className="flex flex-col items-center gap-8 mt-10 lg:flex-row">
+        <img src={featuresImg} className="features-img w-full lg:w-1/2" />
         <ul className="flex flex-col">
           <li className="feature text-xl font-bold py-8 border-b border-lightBlue">
             Connect with likeminded individuals

@@ -19,6 +19,7 @@ const AuthContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const { setDocWithId } = useFireStore("users");
+  const { get } = useFireStore("users");
 
   useEffect(() => {
     return onAuthStateChanged(auth, () => {
@@ -28,9 +29,15 @@ const AuthContextProvider = ({ children }) => {
   }, []);
 
   const googleProvider = new GoogleAuthProvider();
+  googleProvider.addScope("email");
+  googleProvider.addScope("profile");
 
-  const signInWithGoogle = () => {
-    return signInWithPopup(auth, googleProvider);
+  const signInWithGoogle = async () => {
+    const result = await signInWithPopup(auth, googleProvider);
+    const credential = GoogleAuthProvider.credentialFromResult();
+    console.log(credential);
+    const token = credential.accessToken;
+    console.log(token);
   };
 
   const updateUserInfo = (id, firstName, lastName, username) => {

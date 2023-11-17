@@ -5,6 +5,7 @@ import { SpinnerCircular } from "spinners-react";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import googleLogo from "../assets/google-logo.png";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [formValues, setFormValues] = useState({
@@ -22,14 +23,58 @@ const Login = () => {
     }));
   };
 
+  // state to handle form input errors
+  const [formErrors, setFormErrors] = useState({
+    email: null,
+    password: null,
+  });
+
+  // form validation
+  const validateForm = () => {
+    setFormErrors(null);
+
+    const isValidEmail = formValues.email.length > 0;
+    const isValidPassword = formValues.password.length >= 8;
+
+    if (!isValidEmail) {
+      setFormErrors((prev) => {
+        if (prev === null) {
+          return { email: "Invalid email format" };
+        } else {
+          return { ...prev, email: "Invalid email format" };
+        }
+      });
+    }
+
+    if (!isValidPassword) {
+      setFormErrors((prev) => {
+        if (prev === null) {
+          return { password: "Password must be atleast 8 characters long" };
+        } else {
+          return {
+            ...prev,
+            password: "Password must be atleast 8 characters long",
+          };
+        }
+      });
+    }
+
+    return formErrors === null;
+  };
+
   // states to handle login progress
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // handling normal email and password login
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
     try {
       setError(null);
       await login(formValues.email, formValues.password);
@@ -37,40 +82,21 @@ const Login = () => {
       navigate("/dashboard");
     } catch (err) {
       setLoading(false);
-      setError("Failed to login please try again.");
+      toast.error("Failed to login please try again.");
       console.log(err);
     }
   };
 
-  // handling google login
-  const handleGoogleLogin = async () => {
-    setLoading(true);
-    try {
-      await signInWithGoogle();
-      setLoading(false);
-      navigate("/dashboard");
-    } catch (err) {
-      setLoading(false);
-      setError("Couldn't login, please try again");
-    }
-  };
-
-  if (error) {
-    toast.error(error);
-    setError(null);
-  }
-
   return (
-    <div className="bg-veryLightBlue">
+    <div className="bg-veryLightBlue min-h-screen">
       <Toaster />
       <Navbar />
-      <div className="text-blue p-32 flex justify-center">
-        <div className="rounded-md shadow-lg p-16 bg-lightBlue bg-opacity-30">
-          <h2 className="text-3xl mr-16">
-            Welcome back, login to{" "}
-            <span className="font-semibold text-blue">Kwiki</span>
+      <div className="p-8 text-blue  flex justify-center">
+        <div className="w-full rounded-md shadow-lg p-8 bg-lightBlue bg-opacity-30 lg:w-[500px]">
+          <h2 className="text-2xl">
+            Login to <span className="font-semibold text-blue">Kwiki</span>
           </h2>
-          <form className="mt-16 flex flex-col gap-5" onSubmit={handleSubmit}>
+          <form className="mt-8 flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2">
               <label htmlFor="email">Email</label>
               <input
@@ -81,6 +107,9 @@ const Login = () => {
                 value={formValues.email}
                 onChange={(e) => handleChange(e)}
               />
+              {formErrors?.email && (
+                <span className="text-red-500 text-sm">{formErrors.email}</span>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="password">Pasword</label>
@@ -92,11 +121,16 @@ const Login = () => {
                 value={formValues.password}
                 onChange={(e) => handleChange(e)}
               />
+              {formErrors?.password && (
+                <span className="text-red-500 text-sm">
+                  {formErrors.password}
+                </span>
+              )}
             </div>
             {!loading && (
               <button
                 type="submit"
-                className="mt-8 bg-blue text-veryLightBlue rounded-md shadow-sm p-4"
+                className="mt-4 bg-blue text-veryLightBlue rounded-md shadow-sm p-4"
               >
                 Login
               </button>
@@ -105,29 +139,16 @@ const Login = () => {
               <button
                 type="submit"
                 disabled
-                className="flex items-center justify-center mt-8 bg-blue text-veryLightBlue rounded-md shadow-sm p-4"
+                className="flex items-center justify-center mt-4 bg-blue text-veryLightBlue rounded-md shadow-sm p-4"
               >
                 <SpinnerCircular size={20} color="#DAFFFB" />
               </button>
             )}
-            <div className="flex items-center gap-4">
-              <hr className="w-full border-none h-2 bg-lightBlue rounded-lg" />
-              <span>OR</span>
-              <hr className="w-full border-none h-2 bg-lightBlue rounded-lg" />
-            </div>
-            <button
-              type="button"
-              className="flex justify-center items-center gap-2 bg-transparent border-blue border-2 text-blue rounded-md shadow-sm p-4"
-              onClick={handleGoogleLogin}
-            >
-              Continue with Google
-              <img src={googleLogo} className="w-5 h-5" />
-            </button>
           </form>
 
-          <span className="mt-12 block text-center underline">
+          <Link to="/signup" className="mt-4 block text-center underline">
             Don't have an account? Sign up
-          </span>
+          </Link>
         </div>
       </div>
     </div>
